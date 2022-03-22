@@ -11,14 +11,18 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
 
 public class FlightsGUI {
 
+	protected static final GraphicsConfiguration FlightsGUI = null;
 	private JFrame frmBrunelFlightBooker;
 	
 	/**
@@ -36,12 +40,14 @@ public class FlightsGUI {
 			}
 		});
 	}
-	public JComboBox<String> DepartureCity; //all the variables have been set as global across the GUI
-	public JComboBox<String> ArrivalCity;
-	public JDateChooser DepartureDate;
-	public JDateChooser ReturnDate;
-	public String DepCity;
-	public String ArrCity;
+	private JComboBox<String> DepartureCity; //all the variables have been set as global across the GUI
+	private JComboBox<String> ArrivalCity;
+	private JDateChooser DepartureDate;
+	private JDateChooser ReturnDate;
+	private String DepCity;
+	private String ArrCity;
+	
+	
 	/**
 	 * Create the application.
 	 */
@@ -142,7 +148,7 @@ public class FlightsGUI {
 		DepartureDate.getCalendarButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JDateChooser depDate = new JDateChooser();
-				String deprDate = String.format("dd/MM/yyyy");
+				String DepartureDate = depDate.getDateFormatString();
 			}
 		});
 		DepartureDate.setBounds(210, 274, 167, 20);
@@ -153,9 +159,10 @@ public class FlightsGUI {
 		ReturnDate.getCalendarButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JDateChooser retDate = new JDateChooser();
-				String retrnDate = String.format("dd/MM/yyyy");
+				 String ReturnDate = retDate.getDateFormatString();
 			}
 		});
+		
 		ReturnDate.setBounds(510, 274, 167, 20);
 		frmBrunelFlightBooker.getContentPane().add(ReturnDate);
 		
@@ -164,7 +171,7 @@ public class FlightsGUI {
 			public void actionPerformed(ActionEvent e) {
 				FlightsAvailable f1;
 				try {
-					f1 = new FlightsAvailable(DepCity,ArrCity,DepartureDate,ReturnDate);
+					f1 = new FlightsAvailable(getDepartureCity(),getArrivalCity(),getDepartureDate(),getReturnDate());
 					if( DepartureCity.getSelectedItem() == null) {
 						JOptionPane.showMessageDialog(null,"The departure city must be selected !",null, JOptionPane.ERROR_MESSAGE);/* if the user not selected a departure city the program will pop up with an error message*/ 
 						f1.dispose();
@@ -241,4 +248,21 @@ public class FlightsGUI {
 		frmBrunelFlightBooker.getContentPane().add(lblReturnDate);
 		
 	}
+	public String getDepartureCity() {
+		return DepCity;
+	}
+	public String getArrivalCity() {
+		return ArrCity;
+	}
+	public String getDepartureDate() {
+		String depdate2 = ((JTextField)DepartureDate.getDateEditor().getUiComponent()).getText();
+		return depdate2;
+	}
+	public String getReturnDate() {
+		String retdate2 = ((JTextField)ReturnDate.getDateEditor().getUiComponent()).getText();
+		return retdate2;
+	}
+	
+	
 }
+
