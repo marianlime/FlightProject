@@ -8,13 +8,18 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableModel;
 
@@ -51,13 +56,14 @@ public class FlightsAvailable extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param string 
+	 * @param depDate 
 	 * @param arrCity 
 	 * @param depCity 
-	 * @param returnDate 
-	 * @param departureDate 
 	 * @throws IOException 
 	 */
-	public FlightsAvailable(String depCity, String arrCity, JDateChooser departureDate, JDateChooser returnDate) throws IOException {
+	String flightpath = "C:\\Users\\maria\\eclipse-workspace\\FlightComponent\\src\\Flights.csv";
+	public FlightsAvailable(String depCity, String arrCity, String depDate, String retDate ) throws IOException {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1063, 732);
 		contentPane = new JPanel();
@@ -65,21 +71,6 @@ public class FlightsAvailable extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		String[] arr = null;
-		ArrayList<String> ar = new ArrayList<String>();
-		String flightpath = "C:\\Users\\maria\\eclipse-workspace\\FlightComponent\\src\\Flights.csv";
-		String line = "";
-		
-		try {
-			BufferedReader fs = new BufferedReader(new FileReader(flightpath));
-			while ((line = fs.readLine()) !=null) {
-				arr = line.split(",");	
-				if(arr[7].equals(depCity) && arr[9].equals(arrCity) && arr[0].equals(departureDate)) { 
-				}
-		}
-	}catch (FileNotFoundException e) {
-		e.printStackTrace();
-	}
 		
 		table = new JTable();
 		table.setBounds(753, 297, -353, -128);
@@ -118,30 +109,18 @@ public class FlightsAvailable extends JFrame {
 		
 		table_1 = new JTable();
 		scrollPane.setViewportView(table_1);
-		table_1.setModel(new DefaultTableModel(
-				new Object[][] {
-					{arr[9], arr[6], arr[7], arr[8], arr[1], arr[2],arr[10]},
-						},
-				 new String[] {
-				"Departing City", "Airport", "Arriving City", "Airport", "Departure Time", "Arrival Time", "Flight Number"
-			}
-		));
-		
+		DefaultTableModel departureModel = new DefaultTableModel();
+		departureModel.setColumnIdentifiers(new String[] {"Departing City", "Airport", "Arriving City", "Airport", "Departure Time", "Arrival Time","Flight Duration", "Flight Number"});
+		table_1.setModel(departureModel);
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(52, 399, 865, 151);
 		contentPane.add(scrollPane_1);
 		
 		table_2 = new JTable();
 		scrollPane_1.setViewportView(table_2);
-		table_2.setModel(new DefaultTableModel(
-				new Object[][] {
-			{arr[7], arr[6], arr[9], arr[8], arr[1], arr[2],arr[10]},
-				},
-			
-			  new String[] {
-				"Departing City", "Ariport", "Arriving City", "Airport", "Departure Time ", "Arrival Time", "Flight Number"
-			}
-		));
+		DefaultTableModel arrivalModel = new DefaultTableModel();
+		arrivalModel.setColumnIdentifiers(new String[] {"Departing City", "Airport", "Arriving City", "Airport", "Departure Time", "Arrival Time","Flight Duration", "Flight Number"});
+		table_2.setModel(arrivalModel);
 		table_2.getColumnModel().getColumn(0).setPreferredWidth(93);
 		table_2.getColumnModel().getColumn(4).setPreferredWidth(93);
 		table_2.getColumnModel().getColumn(6).setPreferredWidth(88);
@@ -154,8 +133,57 @@ public class FlightsAvailable extends JFrame {
 	}
 
 
+	private ArrayList<Flight> departureFlight = new ArrayList<>();
+	private ArrayList<Flight> returnFlight = new ArrayList<>();
+	public class Flight {
+		String DepartureCity;
+		String DeparutreAirport;
+		String ArrivalCity;
+		String ArrivalAirport;
+		String DepartureTime;
+		String ArrivalTime;
+		String FlightDuration;
+		String FlightNumber;
+		Flight(String DepartureCity, String DepartureAirport, String ArrivalCity, String ArrivalAirport, String DepartureTime, String ArrivalTime, String FlightDuration, String FlightNumber ){
+			this.DepartureCity = DepartureCity;
+			this.DeparutreAirport = DepartureAirport;
+			this.ArrivalCity = ArrivalCity;
+			this.ArrivalAirport = ArrivalAirport;
+			this.DepartureTime = DepartureTime;
+			this.ArrivalTime = ArrivalTime;
+			this.FlightDuration = FlightDuration;
+			this.FlightNumber = FlightNumber;
+		}
+					
+		}
 
 	
-	
+	private void loadData(DefaultTableModel departureModel){
+        String[] arr;
+        String line;
+        String flightpath = "C:\\Users\\maria\\eclipse-workspace\\FlightComponent\\src\\Flights.csv";
+        try {
+            BufferedReader fs = new BufferedReader(new FileReader(flightpath));
+            while ((line = fs.readLine()) !=null) {
+                arr = line.split(",");
+                departureModel.insertRow(departureModel.getRowCount(),new String[]{arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7]});
+            }
+        }catch (Exception e) {
+            e.printStackTrace();}
+        }
+	private void loadData1(DefaultTableModel arrivalModel){
+        String[] arr;
+        String line;
+        String flightpath = "C:\\Users\\maria\\eclipse-workspace\\FlightComponent\\src\\Flights.csv";
+        try {
+            BufferedReader fs = new BufferedReader(new FileReader(flightpath));
+            while ((line = fs.readLine()) !=null) {
+                arr = line.split(",");
+                arrivalModel.insertRow(arrivalModel.getRowCount(),new String[]{arr[0],arr[1],arr[2],arr[3],arr[4],arr[5],arr[6],arr[7]});
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
 }
-
+}
